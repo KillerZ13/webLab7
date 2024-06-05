@@ -23,7 +23,7 @@
         $matric = $_POST['matric'];
         $password = $_POST['password'];
         
-        $p = crud::connect()->prepare('SELECT * FROM users WHERE matric=:m AND password=:p');
+        $p = Crud::connect()->prepare('SELECT * FROM users WHERE matric=:m AND password=:p');
         $p->bindValue(':m', $matric);
         $p->bindValue(':p', $password);
         $p->execute();

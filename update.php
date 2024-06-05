@@ -9,7 +9,21 @@
 <body>
     <?php
         session_start();
-        require('./connection.php');
+        require('connection.php');
+
+        if (isset($_GET['matric'])) {
+            $matric = $_GET['matric'];
+            $data = Crud::selectData();
+            $user = array_filter($data, function ($user) use ($matric) {
+                return $user['matric'] === $matric;
+            });
+            if (!empty($user)) {
+                $user = array_values($user)[0];
+            } else {
+                echo "User not found.";
+                exit;
+            }
+        }
 
         if (isset($_POST['button'])) {
             $matric = $_POST['matric'];
@@ -18,19 +32,15 @@
             $role = $_POST['role'];
 
             if (!empty($matric) && !empty($name) && !empty($password) && !empty($role)) {
-                try {
-                    $crud = new crud();
-                    $updateResult = $crud->update($matric, $name, $password, $role);
+                $crud = new Crud();
+                $updateResult = $crud->update($matric, $name, $password, $role);
 
-                    if ($updateResult === true) {
-                        $_SESSION['validate'] = true;
-                        header("Location: users.php");
-                        exit();
-                    } else {
-                        echo 'Update failed: ' . $updateResult;
-                    }
-                } catch (PDOException $e) {
-                    echo 'Error: ' . $e->getMessage();
+                if ($updateResult) {
+                    $_SESSION['validate'] = true;
+                    header("Location: users.php");
+                    exit();
+                } else {
+                    echo 'Update failed.';
                 }
             } else {
                 echo 'Please fill all the fields!';
@@ -41,19 +51,19 @@
         <h2>Update User</h2>
         <form action="" method="POST">
             <label for="matric">Matric Number</label>
-            <input type="text" id="matric" name="matric" required>
+            <input type="text" id="matric" name="matric" value="<?php echo isset($user['matric']) ? $user['matric'] : ''; ?>" readonly required>
             
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" value="<?php echo isset($user['name']) ? $user['name'] : ''; ?>" required>
             
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" value="<?php echo isset($user['password']) ? $user['password'] : ''; ?>" required>
 
             <label for="role">Role</label>
             <select id="role" name="role" required>
-                <option value="" disabled selected>Select your role</option>
-                <option value="student">Student</option>
-                <option value="lecturer">Lecturer</option>
+                <option value="" disabled>Select your role</option>
+                <option value="student" <?php echo isset($user['role']) && $user['role'] === 'student' ? 'selected' : ''; ?>>Student</option>
+                <option value="lecturer" <?php echo isset($user['role']) && $user['role'] === 'lecturer' ? 'selected' : ''; ?>>Lecturer</option>
             </select>
             <button type="submit" name="button">Update</button>
         </form>

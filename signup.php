@@ -19,7 +19,7 @@
             
             if (!empty($matric) && !empty($name) && !empty($password) && !empty($role))
             {
-                $p = crud::connect()->prepare('INSERT INTO users(matric, name, password, role) VALUES(:m, :n, :p, :r)');
+                $p = Crud::connect()->prepare('INSERT INTO users(matric, name, password, role) VALUES(:m, :n, :p, :r)');
                 $p->bindValue(':m', $matric);
                 $p->bindValue(':n', $name);
                 $p->bindValue(':p', $password);

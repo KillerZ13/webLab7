@@ -68,7 +68,7 @@
             $password = $_POST['password'];
             $role = $_POST['role'];
             
-            $stmt = crud::connect()->prepare('INSERT INTO users (matric, name, password, role) VALUES (:m, :n, :p , :r)');
+            $stmt = Crud::connect()->prepare('INSERT INTO users (matric, name, password, role) VALUES (:m, :n, :p , :r)');
             $stmt->bindValue(':m', $matric);
             $stmt->bindValue(':n', $name);
             $stmt->bindValue(':p', $password);

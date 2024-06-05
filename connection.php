@@ -1,9 +1,9 @@
 <?php
-class crud {
+class Database {
     private static $pdo = null;
 
     public static function connect() {
-        if (self::$pdo == null) {
+        if (self::$pdo === null) {
             try {
                 self::$pdo = new PDO('mysql:host=localhost;dbname=webLab7', 'matric', 'password');
                 self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -13,50 +13,44 @@ class crud {
         }
         return self::$pdo;
     }
+}
 
-    public static function Selectdata() {
-        $data = array();
-        $p = self::connect()->prepare('SELECT * FROM users');
-        $p->execute();
-        $data = $p->fetchAll(PDO::FETCH_ASSOC);
-        return $data;
+class Crud {
+    private static $conn = null;
+
+    public static function connect() {
+        if (self::$conn === null) {
+            try {
+                self::$conn = new PDO('mysql:host=localhost;dbname=webLab7', 'matric', 'password');
+                self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                echo 'Connection failed: ' . $e->getMessage();
+            }
+        }
+        return self::$conn;
+    }
+    public static function selectData() {
+        $conn = Database::connect();
+        $stmt = $conn->prepare('SELECT * FROM users');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function delete($matric) {
-        $conn = self::connect();
-        $sql = "DELETE FROM users WHERE matric = :matric";
-        $stmt = $conn->prepare($sql);
-        if ($stmt) {
-            $stmt->bindParam(':matric', $matric);
-            $result = $stmt->execute();
-            if ($result) {
-                return true;
-            } else {
-                return "Error: " . $stmt->errorInfo()[2];
-            }
-        } else {
-            return "Error: " . $conn->errorInfo()[2];
-        }
+        $conn = Database::connect();
+        $stmt = $conn->prepare('DELETE FROM users WHERE matric = :matric');
+        $stmt->bindParam(':matric', $matric);
+        return $stmt->execute();
     }
 
     public function update($matric, $name, $password, $role) {
-        $conn = self::connect();
-        $sql = "UPDATE users SET name = :name, password = :password, role = :role WHERE matric = :matric";
-        $stmt = $conn->prepare($sql);
-        if ($stmt) {
-            $stmt->bindValue(':name', $name);
-            $stmt->bindValue(':password', $password);
-            $stmt->bindValue(':role', $role);
-            $stmt->bindValue(':matric', $matric);
-            $result = $stmt->execute();
-            if ($result) {
-                return true;
-            } else {
-                return "Error: " . $stmt->errorInfo()[2];
-            }
-        } else {
-            return "Error: " . $conn->errorInfo()[2];
-        }
+        $conn = Database::connect();
+        $stmt = $conn->prepare('UPDATE users SET name = :name, password = :password, role = :role WHERE matric = :matric');
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':role', $role);
+        $stmt->bindParam(':matric', $matric);
+        return $stmt->execute();
     }
 }
 ?>
