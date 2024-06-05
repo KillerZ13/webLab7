@@ -4,41 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./signup.css">
-    <title>Sign Up</title>
+    <title>Update User</title>
 </head>
 <body>
     <?php
         session_start();
         require('./connection.php');
-        if (isset($_POST['button']))
-        {
+
+        if (isset($_POST['button'])) {
             $matric = $_POST['matric'];
             $name = $_POST['name'];
             $password = $_POST['password'];
             $role = $_POST['role'];
-            
-            if (!empty($matric) && !empty($name) && !empty($password) && !empty($role))
-            {
-                $p = crud::connect()->prepare('INSERT INTO users(matric, name, password, role) VALUES(:m, :n, :p, :r)');
-                $p->bindValue(':m', $matric);
-                $p->bindValue(':n', $name);
-                $p->bindValue(':p', $password);
-                $p->bindValue(':r', $role);
-                $p->execute();
-                echo 'Successfully!';
-                
-                if ($p->rowCount() > 0) {
-                    $_SESSION['validate'] = true;
-                    header("Location: login.php");
-                    exit();
+
+            if (!empty($matric) && !empty($name) && !empty($password) && !empty($role)) {
+                try {
+                    $crud = new crud();
+                    $updateResult = $crud->update($matric, $name, $password, $role);
+
+                    if ($updateResult === true) {
+                        $_SESSION['validate'] = true;
+                        header("Location: users.php");
+                        exit();
+                    } else {
+                        echo 'Update failed: ' . $updateResult;
+                    }
+                } catch (PDOException $e) {
+                    echo 'Error: ' . $e->getMessage();
+                }
             } else {
                 echo 'Please fill all the fields!';
             }
         }
-        }
     ?>
     <div class="signup-form">
-        <h2>Sign Up</h2>
+        <h2>Update User</h2>
         <form action="" method="POST">
             <label for="matric">Matric Number</label>
             <input type="text" id="matric" name="matric" required>

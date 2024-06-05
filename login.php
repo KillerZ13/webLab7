@@ -16,7 +16,7 @@
 
 <?php
     session_start();
-    require("./connection.php");
+    require_once("./connection.php");
 
     if (isset($_POST["login_button"])) {
         $_SESSION['validate'] = false;
@@ -27,6 +27,7 @@
         $p->bindValue(':m', $matric);
         $p->bindValue(':p', $password);
         $p->execute();
+
         $d = $p->fetchAll(PDO::FETCH_ASSOC);
         
         if ($p->rowCount() > 0) {
@@ -41,15 +42,15 @@
     }
 ?>
 
-
     <div class="login-form">
         <h2>Login</h2>
         <form action="" method="POST">
             <input type="text" name="matric" placeholder="Matric">
             <input type="password" name="password" placeholder="Password">
             <input type="submit" value="Login" name="login_button">
-            <input type="button" value="Register here" name="register_button">
-
+        </form>
+        <form action="register.php" method="POST">
+            <input type="submit" value="Register here" name="register_button">
         </form>
     </div>
 </body>
