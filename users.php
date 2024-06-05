@@ -51,5 +51,12 @@
         ?>
         </tbody>
     </table>
+    <br>
+    <div style="text-align: center;">
+        <form action="login.php" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+    <br>
 </body>
 </html>

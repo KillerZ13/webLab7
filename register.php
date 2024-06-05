@@ -92,7 +92,7 @@
         <form action="" method="POST">
             <input type="text" name="matric" placeholder="Matric" required>
             <input type="text" name="name" placeholder="Name" required>
-            <input type="password" name="password" placeholder="Password" required>
+            <input type="text" name="password" placeholder="Password" required>
             <select id="role" name="role" required>
                 <option value="" disabled selected>Select your role</option>
                 <option value="student">Student</option>
@@ -100,6 +100,14 @@
             </select>
             <input type="submit" value="Register" name="register_button">
         </form>
+        <br>
+        <h4>Already have an account?</h4>
+        <div style="text-align: center;">
+        <form action="login.php" method="post">
+            <button type="submit">Log in</button>
+        </form>
+    </div>
+    <br>
     </div>
 </body>
 </html>
